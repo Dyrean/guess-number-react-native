@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native';
-import React from 'react';
 import Button from '../components/Button';
 
 function GameStartScreen() {
   return (
-    <View style={styles.container}>
+    <View>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Guess My Number</Text>
       </View>
@@ -15,8 +14,14 @@ function GameStartScreen() {
           selectionColor="yellow"
           keyboardType="number-pad"
         />
-        <Button onPress={() => console.log('Button')}>Reset</Button>
-        <Button onPress={() => console.log('Button')}>Confirm</Button>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <Button onPress={() => console.log('Button')}>Reset</Button>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button onPress={() => console.log('Button')}>Confirm</Button>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -25,16 +30,13 @@ function GameStartScreen() {
 export default GameStartScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'orange',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   titleContainer: {
     padding: 8,
     borderWidth: 1,
     borderColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 25,
   },
   title: {
     color: 'white',
@@ -42,6 +44,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   inputContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
     marginHorizontal: 24,
     backgroundColor: '#4e0429',
@@ -52,7 +56,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 6,
     shadowOpacity: 0.25,
     width: 300,
-    alignItems: 'center',
     marginTop: 20,
   },
   input: {
@@ -66,5 +69,11 @@ const styles = StyleSheet.create({
     width: 50,
     fontStyle: 'normal',
     textAlign: 'center',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+  },
+  buttonContainer: {
+    flex: 1,
   },
 });
