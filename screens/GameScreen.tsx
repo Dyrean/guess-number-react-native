@@ -17,30 +17,23 @@ type Props = {
   navigation: any;
 };
 
-const Direction = {
-  Lower: 'Lower',
-  Greater: 'Greater',
-};
+enum Direction {
+  Lower = 'Lower',
+  Greater = 'Greater',
+}
 
-type Guess = {
-  number: number;
-  minBoundary: number;
-  maxBoundary: number;
-};
+let minBoundary = 1;
+let maxBoundary = 100;
 
 const GameScreen = ({ route }: Props) => {
   const { number } = route.params;
-  const initialGuessNumber = {
-    minBoundary: 1,
-    maxBoundary: 100,
-    number: generateRandomBetween(1, 100, number),
-  };
-  const [currentGuess, setCurrentGuess] = useState<Guess>(initialGuessNumber);
+  const initialGuessNumber = generateRandomBetween(minBoundary, maxBoundary, number);
+  const [currentGuess, setCurrentGuess] = useState(initialGuessNumber);
 
-  function nextGuessNumber(direction: string) {
+  function nextGuessNumber(direction: Direction) {
     if (
-      (direction === Direction.Lower && currentGuess.number < number) ||
-      (direction === Direction.Greater && currentGuess.number > number)
+      (direction === Direction.Lower && currentGuess < number) ||
+      (direction === Direction.Greater && currentGuess > number)
     ) {
       Alert.alert("Don't lie!", 'You know that this is wrong...', [
         {
@@ -49,18 +42,24 @@ const GameScreen = ({ route }: Props) => {
         },
       ]);
       return;
+    } else if (maxBoundary <= minBoundary) {
+      Alert.alert('Game Error', 'The numbers to check ended', [
+        {
+          text: 'Sorry',
+          style: 'cancel',
+        },
+      ]);
+      setCurrentGuess(initialGuessNumber);
+      minBoundary = 1;
+      maxBoundary = 100;
     }
-    let newGuess = currentGuess;
     if (direction === Direction.Lower) {
-      newGuess.maxBoundary = currentGuess.number - 1;
+      maxBoundary = currentGuess - 1;
     } else {
-      newGuess.minBoundary = currentGuess.number + 1;
+      minBoundary = currentGuess + 1;
     }
-    newGuess.number = generateRandomBetween(
-      newGuess.minBoundary,
-      newGuess.maxBoundary,
-      currentGuess.number,
-    );
+    const newGuess = generateRandomBetween(minBoundary, maxBoundary, currentGuess);
+    console.log(newGuess);
     setCurrentGuess(newGuess);
   }
 
@@ -76,7 +75,7 @@ const GameScreen = ({ route }: Props) => {
           <SafeAreaView style={styles.rootScreen}>
             <View style={styles.screen}>
               <Title>Opponent's Guess</Title>
-              <NumberContainer>{currentGuess.number}</NumberContainer>
+              <NumberContainer>{currentGuess}</NumberContainer>
               <View>
                 <Text>Higher or Lower?</Text>
                 <View>
