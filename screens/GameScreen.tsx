@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, ImageBackground, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  FlatList,
+} from 'react-native';
 import Button from '../components/Button';
 import Title from '../components/Title';
 import Colors from '../constants/colors';
 import NumberContainer from '../components/NumberContainer';
+import GuessText from '../components/GuessText';
 
 function generateRandomBetween(min: number, max: number, exclude: number): number {
   const rndNumber = Math.floor(Math.random() * (max - min)) + min;
@@ -29,13 +38,16 @@ const GameScreen = ({ route, navigation }: Props) => {
   const { number } = route.params;
   const initialGuessNumber = generateRandomBetween(minBoundary, maxBoundary, number);
   const [currentGuess, setCurrentGuess] = useState(initialGuessNumber);
+  const [guessArray, setGuessArray] = useState([initialGuessNumber]);
+  const [guessArrayLength, setGuessArrayLength] = useState(guessArray.length);
 
   useEffect(() => {
     if (currentGuess === number) {
-      navigation.navigate('GameOverScreen', { number });
+      navigation.navigate('GameOverScreen', { guessNumber: number, totalGuess: guessArrayLength });
     }
-  }, [currentGuess, number, navigation]);
+  }, [currentGuess, number, navigation, guessArrayLength]);
 
+  // !: BUG: When minBoundary 4 maxBoundary 6
   function nextGuessNumber(direction: Direction) {
     if (
       (direction === Direction.Lower && currentGuess < number) ||
@@ -48,25 +60,16 @@ const GameScreen = ({ route, navigation }: Props) => {
         },
       ]);
       return;
-    } else if (maxBoundary <= minBoundary) {
-      Alert.alert('Game Error', 'The numbers to check ended', [
-        {
-          text: 'Sorry',
-          style: 'cancel',
-        },
-      ]);
-      setCurrentGuess(initialGuessNumber);
-      minBoundary = 1;
-      maxBoundary = 100;
     }
     if (direction === Direction.Lower) {
-      maxBoundary = currentGuess - 1;
+      maxBoundary = currentGuess;
     } else {
       minBoundary = currentGuess + 1;
     }
     const newGuess = generateRandomBetween(minBoundary, maxBoundary, currentGuess);
-    console.log(newGuess);
     setCurrentGuess(newGuess);
+    setGuessArray((previousGuessArray) => [newGuess, ...previousGuessArray]);
+    setGuessArrayLength(guessArray.length);
   }
 
   return (
@@ -82,16 +85,28 @@ const GameScreen = ({ route, navigation }: Props) => {
             <View style={styles.screen}>
               <Title>Opponent's Guess</Title>
               <NumberContainer>{currentGuess}</NumberContainer>
-              <View>
-                <Text>Higher or Lower?</Text>
-                <View>
-                  <View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Higher or Lower?</Text>
+                <View style={styles.buttonsContainer}>
+                  <View style={styles.buttonContainer}>
                     <Button onPress={nextGuessNumber.bind(this, Direction.Greater)}>+</Button>
                   </View>
-                  <View>
+                  <View style={styles.buttonContainer}>
                     <Button onPress={nextGuessNumber.bind(this, Direction.Lower)}>-</Button>
                   </View>
                 </View>
+              </View>
+              <View style={styles.guessList}>
+                <FlatList
+                  data={guessArray}
+                  renderItem={(itemData) => (
+                    <GuessText
+                      index={guessArrayLength + 1 - itemData.index}
+                      number={itemData.item}
+                    />
+                  )}
+                  keyExtractor={(item) => String(item)}
+                />
               </View>
               <View />
             </View>
@@ -118,5 +133,36 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 12,
+    marginTop: 50,
+  },
+  inputContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    marginHorizontal: 24,
+    backgroundColor: Colors.primary400,
+    borderRadius: 16,
+    elevation: 10,
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
+    shadowOpacity: 0.25,
+    width: 300,
+    marginVertical: 20,
+  },
+  text: {
+    fontSize: 26,
+    marginBottom: 12,
+    color: 'white',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+  },
+  buttonContainer: {
+    flex: 1,
+  },
+  guessList: {
+    flexDirection: 'column',
+    marginVertical: 4,
   },
 });

@@ -42,7 +42,6 @@ function GameStartScreen({ navigation }: Props) {
       return;
     }
     navigation.navigate('GameScreen', { number });
-    console.log(`Valid number. ${number}`);
   }
 
   return (
