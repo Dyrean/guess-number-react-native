@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, ImageBackground, StyleSheet, SafeAreaView, Alert } from 'react-native';
@@ -25,10 +25,16 @@ enum Direction {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-const GameScreen = ({ route }: Props) => {
+const GameScreen = ({ route, navigation }: Props) => {
   const { number } = route.params;
   const initialGuessNumber = generateRandomBetween(minBoundary, maxBoundary, number);
   const [currentGuess, setCurrentGuess] = useState(initialGuessNumber);
+
+  useEffect(() => {
+    if (currentGuess === number) {
+      navigation.navigate('GameOverScreen', { number });
+    }
+  }, [currentGuess, number, navigation]);
 
   function nextGuessNumber(direction: Direction) {
     if (
