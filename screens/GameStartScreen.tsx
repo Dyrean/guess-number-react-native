@@ -1,8 +1,22 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, GestureResponderEvent, Alert } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  GestureResponderEvent,
+  Alert,
+  ImageBackground,
+} from 'react-native';
 import Button from '../components/Button';
 
-function GameStartScreen() {
+interface Props {
+  navigation: any;
+}
+
+function GameStartScreen({ navigation }: Props) {
   const [enteredNumber, setEnteredNumber] = useState('');
 
   function handleNumberInput(number: string) {
@@ -26,40 +40,62 @@ function GameStartScreen() {
       ]);
       return;
     }
-
+    navigation.navigate('GameScreen', { number });
     console.log(`Valid number. ${number}`);
   }
 
   return (
-    <View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Guess My Number</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          maxLength={2}
-          selectionColor="yellow"
-          keyboardType="number-pad"
-          value={enteredNumber}
-          onChangeText={handleNumberInput}
-        />
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonContainer}>
-            <Button onPress={resetEnteredNumber}>Reset</Button>
+    <>
+      <LinearGradient colors={['orange', '#4e0429']} style={styles.rootScreen}>
+        <ImageBackground
+          source={require('../assets/images/dice-background.jpg')}
+          resizeMode="cover"
+          style={styles.rootScreen}
+          imageStyle={styles.backgroundImage}
+        >
+          <View>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Guess My Number</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                maxLength={2}
+                selectionColor="yellow"
+                keyboardType="number-pad"
+                value={enteredNumber}
+                onChangeText={handleNumberInput}
+              />
+              <View style={styles.buttonsContainer}>
+                <View style={styles.buttonContainer}>
+                  <Button onPress={resetEnteredNumber}>Reset</Button>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <Button onPress={handleConfirmButton}>Confirm</Button>
+                </View>
+              </View>
+            </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <Button onPress={handleConfirmButton}>Confirm</Button>
-          </View>
-        </View>
-      </View>
-    </View>
+        </ImageBackground>
+      </LinearGradient>
+
+      <StatusBar style="light" />
+    </>
   );
 }
 
 export default GameStartScreen;
 
 const styles = StyleSheet.create({
+  rootScreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  backgroundImage: {
+    opacity: 0.2,
+  },
   titleContainer: {
     padding: 8,
     borderWidth: 1,
