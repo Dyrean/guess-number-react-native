@@ -3,7 +3,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
   GestureResponderEvent,
@@ -11,6 +10,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import Button from '../components/Button';
+import Title from '../components/Title';
+import Colors from '../constants/colors';
 
 interface Props {
   navigation: any;
@@ -46,7 +47,7 @@ function GameStartScreen({ navigation }: Props) {
 
   return (
     <>
-      <LinearGradient colors={['orange', '#4e0429']} style={styles.rootScreen}>
+      <LinearGradient colors={[Colors.accent, Colors.primary400]} style={styles.rootScreen}>
         <ImageBackground
           source={require('../assets/images/dice-background.jpg')}
           resizeMode="cover"
@@ -54,9 +55,7 @@ function GameStartScreen({ navigation }: Props) {
           imageStyle={styles.backgroundImage}
         >
           <View>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Guess My Number</Text>
-            </View>
+            <Title>Guess My Number</Title>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -96,28 +95,15 @@ const styles = StyleSheet.create({
   backgroundImage: {
     opacity: 0.2,
   },
-  titleContainer: {
-    padding: 8,
-    borderWidth: 1,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 25,
-  },
-  title: {
-    color: 'white',
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
   inputContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     marginHorizontal: 24,
-    backgroundColor: '#4e0429',
+    backgroundColor: Colors.primary400,
     borderRadius: 16,
     elevation: 10,
-    shadowColor: 'black',
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     textShadowRadius: 6,
     shadowOpacity: 0.25,
@@ -127,9 +113,9 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     fontSize: 32,
-    borderBottomColor: 'yellow',
+    borderBottomColor: Colors.accent500,
     borderBottomWidth: 2,
-    color: 'yellow',
+    color: Colors.accent500,
     marginVertical: 8,
     fontWeight: 'bold',
     width: 50,
