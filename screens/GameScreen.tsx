@@ -40,15 +40,13 @@ const GameScreen = ({ route, navigation }: Props) => {
   const initialGuessNumber = generateRandomBetween(minBoundary, maxBoundary, number);
   const [currentGuess, setCurrentGuess] = useState(initialGuessNumber);
   const [guessArray, setGuessArray] = useState([initialGuessNumber]);
-  const [guessArrayLength, setGuessArrayLength] = useState(guessArray.length);
 
   useEffect(() => {
     if (currentGuess === number) {
-      navigation.navigate('GameOverScreen', { guessNumber: number, totalGuess: guessArrayLength });
+      navigation.navigate('GameOverScreen', { guessNumber: number, totalGuess: guessArray.length });
     }
-  }, [currentGuess, number, navigation, guessArrayLength]);
+  }, [currentGuess, number, navigation, guessArray.length]);
 
-  // !: BUG: When minBoundary 4 maxBoundary 6
   function nextGuessNumber(direction: Direction) {
     if (
       (direction === Direction.Lower && currentGuess < number) ||
@@ -65,12 +63,12 @@ const GameScreen = ({ route, navigation }: Props) => {
     if (direction === Direction.Lower) {
       maxBoundary = currentGuess;
     } else {
-      minBoundary = currentGuess + 1;
+      minBoundary = currentGuess;
     }
+    console.log(`maxBoundary: ${maxBoundary} , minBoundary: ${minBoundary}`);
     const newGuess = generateRandomBetween(minBoundary, maxBoundary, currentGuess);
     setCurrentGuess(newGuess);
     setGuessArray((previousGuessArray) => [newGuess, ...previousGuessArray]);
-    setGuessArrayLength(guessArray.length);
   }
 
   return (
@@ -105,10 +103,7 @@ const GameScreen = ({ route, navigation }: Props) => {
                 <FlatList
                   data={guessArray}
                   renderItem={(itemData) => (
-                    <GuessText
-                      index={guessArrayLength + 1 - itemData.index}
-                      number={itemData.item}
-                    />
+                    <GuessText index={guessArray.length - itemData.index} number={itemData.item} />
                   )}
                   keyExtractor={(item) => String(item)}
                 />

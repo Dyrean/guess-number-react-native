@@ -1,14 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  GestureResponderEvent,
-  Alert,
-  ImageBackground,
-} from 'react-native';
+import { StyleSheet, View, TextInput, Alert, ImageBackground } from 'react-native';
 import Button from '../components/Button';
 import Title from '../components/Title';
 import Colors from '../constants/colors';
@@ -28,8 +21,7 @@ function GameStartScreen({ navigation }: Props) {
     setEnteredNumber('');
   }
 
-  function handleConfirmButton(event: GestureResponderEvent) {
-    event.preventDefault();
+  function handleConfirmButton() {
     const number = Number(enteredNumber);
     if (isNaN(number) || number <= 0 || number >= 99) {
       Alert.alert('Invalid number!', 'Number has to be number between 1 and 99', [
@@ -41,6 +33,7 @@ function GameStartScreen({ navigation }: Props) {
       ]);
       return;
     }
+    resetEnteredNumber();
     navigation.navigate('GameScreen', { number });
   }
 
