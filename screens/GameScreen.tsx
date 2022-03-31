@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
 import {
   View,
   Text,
@@ -89,10 +90,14 @@ const GameScreen = ({ route, navigation }: Props) => {
                 <Text style={styles.text}>Higher or Lower?</Text>
                 <View style={styles.buttonsContainer}>
                   <View style={styles.buttonContainer}>
-                    <Button onPress={nextGuessNumber.bind(this, Direction.Greater)}>+</Button>
+                    <Button onPress={nextGuessNumber.bind(this, Direction.Greater)}>
+                      <Ionicons name="add-circle-outline" size={24} color="white" />
+                    </Button>
                   </View>
                   <View style={styles.buttonContainer}>
-                    <Button onPress={nextGuessNumber.bind(this, Direction.Lower)}>-</Button>
+                    <Button onPress={nextGuessNumber.bind(this, Direction.Lower)}>
+                      <Ionicons name="remove-circle-outline" size={24} color="white" />
+                    </Button>
                   </View>
                 </View>
               </View>
