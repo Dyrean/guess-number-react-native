@@ -65,7 +65,6 @@ const GameScreen = ({ route, navigation }: Props) => {
     } else {
       minBoundary = currentGuess;
     }
-    console.log(`maxBoundary: ${maxBoundary} , minBoundary: ${minBoundary}`);
     const newGuess = generateRandomBetween(minBoundary, maxBoundary, currentGuess);
     setCurrentGuess(newGuess);
     setGuessArray((previousGuessArray) => [newGuess, ...previousGuessArray]);
